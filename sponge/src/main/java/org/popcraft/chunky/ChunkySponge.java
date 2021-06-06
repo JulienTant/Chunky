@@ -237,6 +237,17 @@ public class ChunkySponge {
                     return CommandResult.success();
                 })
                 .build();
+        Command.Parameterized statusCommand = Command.builder()
+                .permission("chunky.command.status")
+                .addParameters(Parameter.world().key("world").build())
+                .executor(ctx -> {
+                    List<String> args = new ArrayList<>();
+                    args.add("status");
+                    ctx.one(Parameter.key("world", ServerWorld.class)).map(ServerWorld::key).map(ResourceKey::asString).ifPresent(args::add);
+                    executeSpongeCommand(ctx, "status", args);
+                    return CommandResult.success();
+                })
+                .build();
         Command.Parameterized trimCommand = Command.builder()
                 .permission("chunky.command.trim")
                 .addParameters(Parameter.world().key("world").optional().build())
@@ -293,6 +304,7 @@ public class ChunkySponge {
                 .addChild(silentCommand, "silent")
                 .addChild(spawnCommand, "spawn")
                 .addChild(startCommand, "start")
+                .addChild(statusCommand, "status")
                 .addChild(trimCommand, "trim")
                 .addChild(worldborderCommand, "worldborder")
                 .addChild(worldCommand, "world")

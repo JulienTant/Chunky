@@ -19,6 +19,7 @@ public class GenerationTask implements Runnable {
     private final Shape shape;
     private boolean stopped, cancelled;
     private long prevTime;
+    private double speed;
     private final AtomicLong startTime = new AtomicLong();
     private final AtomicLong printTime = new AtomicLong();
     private final AtomicLong finishedChunks = new AtomicLong();
@@ -64,7 +65,7 @@ public class GenerationTask implements Runnable {
         if (chunksLeft > 0 && timeDiff < 1e-1) {
             return;
         }
-        double speed = chunkUpdateTimes.size() / timeDiff;
+        speed = chunkUpdateTimes.size() / timeDiff;
         Sender console = chunky.getPlatform().getServer().getConsoleSender();
         if (chunksLeft == 0) {
             long total = (prevTime + (currentTime - startTime.get())) / 1000;
@@ -143,5 +144,9 @@ public class GenerationTask implements Runnable {
 
     public long getTotalTime() {
         return prevTime + (startTime.get() > 0 ? System.currentTimeMillis() - startTime.get() : 0);
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 }
